@@ -9,7 +9,7 @@
 import UIKit
 
 class ViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate{
-
+    
     @IBOutlet weak var segmentControl: UISegmentedControl!
     @IBOutlet var collectionView: UICollectionView!
     
@@ -19,23 +19,23 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         self.apiClient(satelite: 0)
         
     }
-
+    
     
     func apiClient(satelite: Int){
         
-        var urlConsome = "https://api.nasa.gov/mars-photos/api/v1/rovers/"
+        var urlConsome = ""
         
         switch satelite
         {
         case 0:
-          
-            urlConsome = urlConsome + "curiosity/photos?earth_date=2015-6-3&api_key=" + ApiKey.apiKey
+            
+            urlConsome = ApiKey.url + "curiosity/photos?earth_date=2015-6-3&api_key=" + ApiKey.apiKey
             
         case 1:
-            urlConsome = urlConsome +  "opportunity/photos?earth_date=2015-6-3&api_key=" + ApiKey.apiKey
+            urlConsome = ApiKey.url  +  "opportunity/photos?earth_date=2015-6-3&api_key=" + ApiKey.apiKey
             
         case 2:
-            urlConsome =  urlConsome + "spirit/photos?earth_date=2015-6-3&api_key="  + ApiKey.apiKey
+            urlConsome =  ApiKey.url  + "spirit/photos?earth_date=2015-6-3&api_key="  + ApiKey.apiKey
             
         default:
             break
@@ -54,20 +54,20 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
             do {
                 
                 let data = try? JSONDecoder().decode(Photo.self, from: dataResponse)
-
+                
                 let counter = data!.photos.count
-
+                
                 
                 DataSource.dataSourceCode.removeAll()
                 
                 
                 for i in 0..<counter {
-
+                    
                     var row = [String]()
                     
                     row.append(data!.photos[i].camera.name)
                     row.append(data!.photos[i].camera.fullName)
-
+                    
                     
                     let aString = data!.photos[i].imgSrc
                     let newString = aString.replacingOccurrences(of: "http", with: "https", options: .literal, range: nil)
@@ -77,6 +77,8 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
                     DataSource.dataSourceCode.append(row)
                     
                 }
+                
+                
                 
                 DispatchQueue.main.async {
                     self.collectionView.reloadSections(IndexSet(integer: 0))
@@ -103,7 +105,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "collectionViewCell", for: indexPath) as! CollectionViewCell
         
         cell.Label.text = DataSource.dataSourceCode[indexPath.row][0]
-      
+        
         let url = NSURL(string: DataSource.dataSourceCode[indexPath.row][2])
         
         DispatchQueue.global().async { [weak self] in
@@ -119,7 +121,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         
         return cell
     }
- 
+    
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
         let mainStoryBoard:UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
@@ -133,7 +135,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     }
     
     
-    @IBAction func IndexChange(_ sender: Any) {        
+    @IBAction func IndexChange(_ sender: Any) {
         
         switch segmentControl.selectedSegmentIndex
         {

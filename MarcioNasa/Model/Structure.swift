@@ -82,5 +82,6 @@ struct DataSource {
 }
 
 struct ApiKey {
+    static var url = "https://api.nasa.gov/mars-photos/api/v1/rovers/"
     static var apiKey = "ZydrmguHOX8gxFw6jhH94dXfageMpCc4e8uOp0EU"
 }
